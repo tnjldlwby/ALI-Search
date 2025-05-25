@@ -40,7 +40,6 @@
     background-color: #f00;
     box-shadow: 0 0 15px #f00;
   }
-  /* تنظيم الأزرار كما في يد تحكم */
   .row {
     margin: 10px 0;
   }
@@ -53,55 +52,78 @@
     display: inline-block;
     width: 10%;
   }
+  #ipInput {
+    padding: 10px;
+    font-size: 16px;
+    width: 80%;
+    margin: 10px auto;
+    border-radius: 10px;
+    border: none;
+    display: block;
+  }
 </style>
 </head>
 <body>
 
 <h1>يد تحكم بلايستيشن 3</h1>
+<p>أدخل IP جهاز PS3:</p>
+<input id="ipInput" type="text" placeholder="مثلاً 192.168.1.5" />
+
 <div class="controller">
 
   <div class="row">
     <div class="left-buttons">
-      <div class="button" id="btn-l2">L2</div>
-      <div class="button" id="btn-l1">L1</div>
-      <div class="button" id="btn-l3">L3</div>
+      <div class="button" data-command="l2">L2</div>
+      <div class="button" data-command="l1">L1</div>
+      <div class="button" data-command="l3">L3</div>
     </div>
     <div class="center-buttons">
-      <div class="button" id="btn-ps">PS</div>
+      <div class="button" data-command="ps">PS</div>
     </div>
     <div class="right-buttons">
-      <div class="button" id="btn-r1">R1</div>
-      <div class="button" id="btn-r2">R2</div>
-      <div class="button" id="btn-r3">R3</div>
+      <div class="button" data-command="r1">R1</div>
+      <div class="button" data-command="r2">R2</div>
+      <div class="button" data-command="r3">R3</div>
     </div>
   </div>
 
   <div class="row">
     <div class="left-buttons">
-      <div class="button" id="btn-dpad-up">▲</div><br />
-      <div class="button" id="btn-dpad-left">◄</div>
-      <div class="button" id="btn-dpad-down">▼</div>
-      <div class="button" id="btn-dpad-right">►</div>
+      <div class="button" data-command="up">▲</div><br />
+      <div class="button" data-command="left">◄</div>
+      <div class="button" data-command="down">▼</div>
+      <div class="button" data-command="right">►</div>
     </div>
     <div class="center-buttons">
-      <div class="button" id="btn-select">Select</div><br/><br/>
-      <div class="button" id="btn-start">Start</div>
+      <div class="button" data-command="select">Select</div><br/><br/>
+      <div class="button" data-command="start">Start</div>
     </div>
     <div class="right-buttons">
-      <div class="button" id="btn-triangle">△</div>
-      <div class="button" id="btn-circle">O</div>
-      <div class="button" id="btn-cross">X</div>
-      <div class="button" id="btn-square">■</div>
+      <div class="button" data-command="triangle">△</div>
+      <div class="button" data-command="circle">O</div>
+      <div class="button" data-command="cross">X</div>
+      <div class="button" data-command="square">■</div>
     </div>
   </div>
 
 </div>
 
 <script>
-  // اضغط زر لتغيير لونه
   document.querySelectorAll('.button').forEach(button => {
     button.addEventListener('mousedown', () => {
       button.classList.add('pressed');
+      const ip = document.getElementById('ipInput').value.trim();
+      const cmd = button.dataset.command;
+      if (!ip) {
+        alert("يرجى إدخال IP جهاز PS3");
+        return;
+      }
+      fetch(`http://${ip}/pad=${cmd}`).then(() => {
+        console.log("تم إرسال:", cmd);
+      }).catch(err => {
+        alert("فشل الاتصال بـ PS3");
+        console.error(err);
+      });
     });
     button.addEventListener('mouseup', () => {
       button.classList.remove('pressed');
