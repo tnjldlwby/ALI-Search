@@ -1,138 +1,118 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>يد تحكم بلايستيشن 3</title>
-<style>
-  body {
-    background: #222;
-    color: #eee;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
-  }
-  .controller {
-    display: inline-block;
-    background: #333;
-    border-radius: 30px;
-    padding: 40px;
-    width: 400px;
-    box-shadow: 0 0 20px #000;
-    user-select: none;
-  }
-  .button {
-    display: inline-block;
-    margin: 10px;
-    background: #555;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    border-radius: 50%;
-    color: white;
-    font-weight: bold;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    box-shadow: 0 0 5px #111 inset;
-  }
-  .button.pressed {
-    background-color: #f00;
-    box-shadow: 0 0 15px #f00;
-  }
-  .row {
-    margin: 10px 0;
-  }
-  .left-buttons, .right-buttons {
-    display: inline-block;
-    vertical-align: top;
-    width: 45%;
-  }
-  .center-buttons {
-    display: inline-block;
-    width: 10%;
-  }
-  #ipInput {
-    padding: 10px;
-    font-size: 16px;
-    width: 80%;
-    margin: 10px auto;
-    border-radius: 10px;
-    border: none;
-    display: block;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ali Remove BG - إزالة الخلفية</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      background-color: #1e1e2f;
+      color: #fff;
+      text-align: center;
+      padding: 30px 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #00ffd9;
+    }
+    input[type="file"] {
+      background-color: #333;
+      color: #00ffd9;
+      border: 2px dashed #00ffd9;
+      padding: 12px;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    button {
+      background: #00ffd9;
+      color: #000;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00c3a7;
+    }
+    #output {
+      margin-top: 25px;
+    }
+    #output img {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 255, 217, 0.5);
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #aaa;
+    }
+    footer span {
+      color: #00ffd9;
+    }
+    a {
+      color: #00ffd9;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
+  <h1>🎨 Ali Remove BG</h1>
+  <p>إزالة الخلفية من الصور تلقائيًا مجانًا!</p>
+  <br>
+  <input type="file" id="imageInput" accept="image/*" />
+  <br><br>
+  <button onclick="removeBackground()">إزالة الخلفية الآن</button>
+  <div id="output"></div>
 
-<h1>يد تحكم بلايستيشن 3</h1>
-<p>أدخل IP جهاز PS3:</p>
-<input id="ipInput" type="text" placeholder="مثلاً 192.168.1.5" />
+  <footer>
+    <br><hr style="border: none; border-top: 1px solid #444; margin: 20px 0;">
+    <p>جميع الحقوق محفوظة لـ <span>علي</span> ❤️ - موقع <strong>Ali Remove BG</strong></p>
+  </footer>
 
-<div class="controller">
+  <script>
+    async function removeBackground() {
+      const input = document.getElementById('imageInput');
+      if (!input.files[0]) return alert("يرجى اختيار صورة أولاً");
 
-  <div class="row">
-    <div class="left-buttons">
-      <div class="button" data-command="l2">L2</div>
-      <div class="button" data-command="l1">L1</div>
-      <div class="button" data-command="l3">L3</div>
-    </div>
-    <div class="center-buttons">
-      <div class="button" data-command="ps">PS</div>
-    </div>
-    <div class="right-buttons">
-      <div class="button" data-command="r1">R1</div>
-      <div class="button" data-command="r2">R2</div>
-      <div class="button" data-command="r3">R3</div>
-    </div>
-  </div>
+      const formData = new FormData();
+      formData.append("image_file", input.files[0]);
+      formData.append("size", "auto");
 
-  <div class="row">
-    <div class="left-buttons">
-      <div class="button" data-command="up">▲</div><br />
-      <div class="button" data-command="left">◄</div>
-      <div class="button" data-command="down">▼</div>
-      <div class="button" data-command="right">►</div>
-    </div>
-    <div class="center-buttons">
-      <div class="button" data-command="select">Select</div><br/><br/>
-      <div class="button" data-command="start">Start</div>
-    </div>
-    <div class="right-buttons">
-      <div class="button" data-command="triangle">△</div>
-      <div class="button" data-command="circle">O</div>
-      <div class="button" data-command="cross">X</div>
-      <div class="button" data-command="square">■</div>
-    </div>
-  </div>
+      const response = await fetch("https://api.remove.bg/v1.0/removebg", {
+        method: "POST",
+        headers: {
+          "X-Api-Key": "S8EwTbxG3rPiD9K8PVYVNjxC"
+        },
+        body: formData
+      });
 
-</div>
-
-<script>
-  document.querySelectorAll('.button').forEach(button => {
-    button.addEventListener('mousedown', () => {
-      button.classList.add('pressed');
-      const ip = document.getElementById('ipInput').value.trim();
-      const cmd = button.dataset.command;
-      if (!ip) {
-        alert("يرجى إدخال IP جهاز PS3");
+      if (!response.ok) {
+        alert("حدث خطأ أثناء إزالة الخلفية");
         return;
       }
-      fetch(`http://${ip}/pad=${cmd}`).then(() => {
-        console.log("تم إرسال:", cmd);
-      }).catch(err => {
-        alert("فشل الاتصال بـ PS3");
-        console.error(err);
-      });
-    });
-    button.addEventListener('mouseup', () => {
-      button.classList.remove('pressed');
-    });
-    button.addEventListener('mouseleave', () => {
-      button.classList.remove('pressed');
-    });
-  });
-</script>
 
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      document.getElementById("output").innerHTML = `
+        <h2>✅ الصورة بدون خلفية:</h2>
+        <img src="${url}" alt="بدون خلفية" />
+        <br><br>
+        <a href="${url}" download="no-bg.png">⬇️ تحميل الصورة</a>
+      `;
+    }
+  </script>
 </body>
 </html>
